@@ -7,7 +7,7 @@
 # Created Date: 2022-06-24 18:11:57
 # Author: Zz
 # -----
-# Last Modified: 2022-06-24 18:23:56
+# Last Modified: 2022-06-24 18:32:18
 # Modified By: Zz
 # -----
 # Description:
@@ -26,7 +26,8 @@ ANSWER_KEY_SCORE = {0: 1, 1: 4, 2: 0, 3: 3, 4: 1}
 ANSWER_KEY = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E"}
 
 # 加载一个图片到opencv中
-img = cv.imread('./imgs/example01/t1.png')
+# img = cv.imread('./imgs/example01/t1.png')
+img = cv.imread('./imgs/example01/t2.jpg')
 
 # cv.imshow("orgin",img)
 
@@ -134,8 +135,8 @@ for c in list:
             bubble_rows=sorted(bubble_rows,key=lambda x: x[0],reverse=True)
             # 选择的答案序号
             choice_num=bubble_rows[0][1]
-            print("答案：{} 数据: {}".format(ANSWER_KEY.get(choice_num),bubble_rows))
-
+			
+            print("{} 答案：{} 数据: {};".format(choice_num, ANSWER_KEY.get(choice_num), bubble_rows))
 
             fill_color=None
 
