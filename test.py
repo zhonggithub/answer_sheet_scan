@@ -7,7 +7,7 @@
 # Created Date: 2022-06-24 18:11:57
 # Author: Zz
 # -----
-# Last Modified: 2022-06-24 20:29:20
+# Last Modified: 2022-06-24 21:12:23
 # Modified By: Zz
 # -----
 # Description:
@@ -27,7 +27,8 @@ ANSWER_KEY = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E"}
 
 # 加载一个图片到opencv中
 # img = cv.imread('./imgs/example01/t1.png')
-img = cv.imread('./imgs/example01/t2.jpg')
+# img = cv.imread('./imgs/example01/t2.jpg')
+img = cv.imread('./imgs/example01/t3.jpg')
 
 # cv.imshow("orgin",img)
 
