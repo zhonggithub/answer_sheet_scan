@@ -1,3 +1,17 @@
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
+###
+# File: test.py
+# Project: answer_sheet_scan
+# FilePath: /test.py
+# Created Date: 2022-06-24 18:11:57
+# Author: Zz
+# -----
+# Last Modified: 2022-06-24 18:23:56
+# Modified By: Zz
+# -----
+# Description:
+###
 # -*- coding:utf-8 -*-
 from imutils.perspective import four_point_transform
 from imutils import contours
@@ -14,21 +28,21 @@ ANSWER_KEY = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E"}
 # 加载一个图片到opencv中
 img = cv.imread('./imgs/example01/t1.png')
 
-cv.imshow("orgin",img)
+# cv.imshow("orgin",img)
 
 #转化成灰度图片
 gray=cv.cvtColor(img,cv.COLOR_BGR2GRAY)
 
-cv.imshow("gray",gray)
+# cv.imshow("gray",gray)
 
 gaussian_bulr = cv.GaussianBlur(gray, (5, 5), 0)  # 高斯模糊
 
-cv.imshow("gaussian",gaussian_bulr)
+# cv.imshow("gaussian",gaussian_bulr)
 
 
 edged=cv.Canny(gaussian_bulr,75,200) # 边缘检测,灰度值小于2参这个值的会被丢弃，大于3参这个值会被当成边缘，在中间的部分，自动检测
 
-cv.imshow("edged",edged)
+# cv.imshow("edged",edged)
 
 # 寻找轮廓
 cts, hierarchy = cv.findContours(edged.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
@@ -40,7 +54,7 @@ cts, hierarchy = cv.findContours(edged.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX
 list=sorted(cts,key=cv.contourArea,reverse=True)
 
 print("寻找轮廓的个数：",len(cts))
-cv.imshow("draw_contours",img)
+# cv.imshow("draw_contours",img)
 
 # 正确题的个数
 correct_count=0
@@ -59,11 +73,11 @@ for c in list:
         # 透视变换提取灰度图内容部分
         tx_sheet = four_point_transform(gray, approx.reshape(4, 2))
 
-        cv.imshow("ox", ox_sheet)
-        cv.imshow("tx", tx_sheet)
+        # cv.imshow("ox", ox_sheet)
+        # cv.imshow("tx", tx_sheet)
         # 使用ostu二值化算法对灰度图做一个二值化处理
         ret,thresh2 = cv.threshold(tx_sheet, 0, 255,cv.THRESH_BINARY_INV | cv.THRESH_OTSU)
-        cv.imshow("ostu", thresh2)
+        # cv.imshow("ostu", thresh2)
 
         # 继续寻找轮廓
         r_cnt, r_hierarchy = cv.findContours(thresh2.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
@@ -88,7 +102,7 @@ for c in list:
                 # 把每个选项，保存下来
                 questionCnts.append(cxx)
 
-        cv.imshow("ox_1", ox_sheet)
+        # cv.imshow("ox_1", ox_sheet)
         # 按坐标从上到下排序
         questionCnts = contours.sort_contours(questionCnts, method="top-to-bottom")[0]
 
@@ -117,7 +131,6 @@ for c in list:
                 bubble_rows.append((total,j))
 
 
-
             bubble_rows=sorted(bubble_rows,key=lambda x: x[0],reverse=True)
             # 选择的答案序号
             choice_num=bubble_rows[0][1]
@@ -137,7 +150,7 @@ for c in list:
 
 
 
-        cv.imshow("answer_flagged", ox_sheet)
+        # cv.imshow("answer_flagged", ox_sheet)
 
         text1 = "total: " + str(len(ANSWER_KEY)) + ""
 
@@ -148,13 +161,8 @@ for c in list:
         font = cv.FONT_HERSHEY_SIMPLEX
         cv.putText(ox_sheet, text1 + "  " + text2+"  "+text3, (10, 30), font, 0.5, (0, 0, 255), 2)
 
-        cv.imshow("score", ox_sheet)
+        # cv.imshow("score", ox_sheet)
 
         break
 
-
-
-
-cv.waitKey(0)
-
-
+# cv.waitKey(0)
