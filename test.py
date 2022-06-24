@@ -7,7 +7,7 @@
 # Created Date: 2022-06-24 18:11:57
 # Author: Zz
 # -----
-# Last Modified: 2022-06-24 18:32:18
+# Last Modified: 2022-06-24 20:29:20
 # Modified By: Zz
 # -----
 # Description:
@@ -89,13 +89,11 @@ for c in list:
         # cv.drawContours(ox_sheet,r_cnt,-1,(0,0,255),2)
 
         # 把所有找到的轮廓，给标记出来
-
         questionCnts = []
         for cxx in r_cnt:
             # 通过矩形，标记每一个指定的轮廓
             x, y, w, h = cv.boundingRect(cxx)
             ar = w / float(h)
-
 
             if w >= 20 and h >= 20 and ar >= 0.9 and ar <= 1.1:
                 # 使用红色标记，满足指定条件的图形
@@ -109,35 +107,30 @@ for c in list:
 
         # 使用np函数，按5个元素，生成一个集合
         for (q, i) in enumerate(np.arange(0, len(questionCnts), 5)):
-
             # 获取按从左到右的排序后的5个元素
             cnts = contours.sort_contours(questionCnts[i:i + 5])[0]
-
             bubble_rows=[]
-
             # 遍历每一个选项
             for (j, c) in enumerate(cnts):
-
                 # 生成一个大小与透视图一样的全黑背景图布
                 mask = np.zeros(tx_sheet.shape, dtype="uint8")
                 # 将指定的轮廓+白色的填充写到画板上,255代表亮度值，亮度=255的时候，颜色是白色，等于0的时候是黑色
                 cv.drawContours(mask, [c], -1, 255, -1)
                 # 做两个图片做位运算，把每个选项独自显示到画布上，为了统计非0像素值使用，这部分像素最大的其实就是答案
                 mask = cv.bitwise_and(thresh2, thresh2, mask=mask)
-                # cv.imshow("c" + str(i), mask)
+                cv.imshow("c" + str(i), mask)
                 # 获取每个答案的像素值
                 total = cv.countNonZero(mask)
                 # 存到一个数组里面，tuple里面的参数分别是，像素大小和答案的序号值
                 # print(total,j)
                 bubble_rows.append((total,j))
 
+            # print(bubble_rows)
 
             bubble_rows=sorted(bubble_rows,key=lambda x: x[0],reverse=True)
             # 选择的答案序号
             choice_num=bubble_rows[0][1]
-			
-            print("{} 答案：{} 数据: {};".format(choice_num, ANSWER_KEY.get(choice_num), bubble_rows))
-
+            print("答案：{} 数据: {};".format(ANSWER_KEY.get(choice_num), bubble_rows))
             fill_color=None
 
             # 如果做对就加1
@@ -146,24 +139,18 @@ for c in list:
                 correct_count = correct_count+1
             else:
                 fill_color = (0, 0, 255)   #错误 红色
-
             cv.drawContours(ox_sheet, cnts[choice_num], -1, fill_color, 2)
-
-
 
         # cv.imshow("answer_flagged", ox_sheet)
 
         text1 = "total: " + str(len(ANSWER_KEY)) + ""
-
         text2 = "right: " + str(correct_count)
-
         text3 = "score: " + str(correct_count*1.0/len(ANSWER_KEY)*100)+""
 
         font = cv.FONT_HERSHEY_SIMPLEX
         cv.putText(ox_sheet, text1 + "  " + text2+"  "+text3, (10, 30), font, 0.5, (0, 0, 255), 2)
-
-        # cv.imshow("score", ox_sheet)
+        cv.imshow("score", ox_sheet)
 
         break
 
-# cv.waitKey(0)
+cv.waitKey(1000 * 20)
